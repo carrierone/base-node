@@ -1,0 +1,64 @@
+version: '3.8'
+services:
+  base-op-node:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - OP_NODE_L1_ETH_RPC=http://192.168.7.17:8545
+      - OP_NODE_L1_BEACON=http://192.168.7.18:5052
+      - OP_NODE_L1_BEACON_ARCHIVER=http://192.168.7.18:5052
+      - OP_NODE_L1_RPC_KIND=nethermind
+      - OP_NODE_NETWORK=base-mainnet
+      - OP_NODE_SEQUENCER=https://mainnet-sequencer.base.org
+      - NODE_TYPE=vanilla
+    volumes:
+      - base_op_node_data:/data
+    networks:
+      macvlan_ens2f0np0:
+        ipv4_address: 192.168.7.35
+    ports:
+      - "7545:8545"
+      - "9223:9222"
+      - "9223:9222/udp"
+      - "7302:7300"
+      - "6061:6060"
+    depends_on:
+      - base-execution
+    restart: unless-stopped
+  base-execution:
+    image: nethermindeth/nethermind:latest
+    command: ["/snapshot-download.sh", "nethermind", "--config", "base"]
+    environment:
+      - NETHERMIND_L1_RPC_URL=http://192.168.7.17:8545
+      - NETHERMIND_L1_BEACON_URL=http://192.168.7.18:5052
+      - JsonRpc.Enabled=true
+      - JsonRpc.Host=0.0.0.0
+      - JsonRpc.Port=8545
+      - JsonRpc.CorsOrigins=*
+      - JsonRpc.EnabledModules=eth,net,web3,debug,optimism
+      - Optimism.Enabled=true
+      - Optimism.SequencerUrl=https://mainnet-sequencer.base.org
+      - Database.Path=/data
+      - Sync.Snap=true
+      - Network.DiscoveryPort=30304
+      - Network.P2PPort=30304
+    volumes:
+      - base_execution_data:/data
+      - ./snapshot-download.sh:/snapshot-download.sh
+    networks:
+      - default
+    ports:
+      - "8547:8545"
+      - "30304:30304"
+      - "30304:30304/udp"
+      - "7303:6060"
+    restart: unless-stopped
+volumes:
+  base_op_node_data:
+  base_execution_data:
+networks:
+  default:
+    driver: bridge
+  macvlan_ens2f0np0:
+    external: true

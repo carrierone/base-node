@@ -48,7 +48,7 @@ services:
 
     volumes:
       - base_execution_data:/data
-      - ./snapshot-download.sh:/snapshot-download.sh
+      - ./snapshot-download.sh:/snapshot-download.sh:ro
     networks:
       - default
     ports:

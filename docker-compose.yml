@@ -15,7 +15,7 @@ services:
     volumes:
       - base_op_node_data:/data
     networks:
-      ipvlan_ens2f0np0:
+      macvlan_ens2f0np0:
         ipv4_address: 192.168.7.35
     ports:
       - "7545:8545"
@@ -26,9 +26,11 @@ services:
     depends_on:
       - base-execution
     restart: unless-stopped
+
   base-execution:
     image: nethermindeth/nethermind:latest
-    command: ["/snapshot-download.sh", "nethermind", "--config", "base"]
+    entrypoint: ["/snapshot-download.sh"]
+    command: ["--config", "base"]
     environment:
       - NETHERMIND_L1_RPC_URL=http://192.168.7.17:8545
       - NETHERMIND_L1_BEACON_URL=http://192.168.7.18:5052
@@ -42,7 +44,8 @@ services:
       - Database.Path=/data
       - Sync.Snap=true
       - Network.DiscoveryPort=30304
-      - Network.P2PPort=30304
+      - Network.P2PP
+
     volumes:
       - base_execution_data:/data
       - ./snapshot-download.sh:/snapshot-download.sh
@@ -54,11 +57,13 @@ services:
       - "30304:30304/udp"
       - "7303:6060"
     restart: unless-stopped
+
 volumes:
   base_op_node_data:
   base_execution_data:
+
 networks:
   default:
     driver: bridge
-  ipvlan_ens2f0np0:
+  macvlan_ens2f0np0:
     external: true

@@ -1,4 +1,5 @@
 FROM nethermindeth/nethermind:latest
-RUN apt update -qq && apt install -y -qq curl aria2 zstd && rm -rf /var/lib/apt/lists/*
+RUN apt update -qq && apt install -y -qq curl aria2 zstd openssl && rm -rf /var/lib/apt/lists/*
 COPY snapshot-download.sh /snapshot-download.sh
 RUN chmod +x /snapshot-download.sh
+ENTRYPOINT ["/snapshot-download.sh"]

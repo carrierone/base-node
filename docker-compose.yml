@@ -5,14 +5,21 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    environment:
-      - OP_NODE_L1_ETH_RPC=http://192.168.7.17:8545
-      - OP_NODE_L1_BEACON=http://192.168.7.18:5052
-      - OP_NODE_L1_BEACON_ARCHIVER=http://192.168.7.18:5052
-      - OP_NODE_L1_RPC_KIND=nethermind
-      - OP_NODE_NETWORK=base-mainnet
-      - OP_NODE_SEQUENCER=https://mainnet-sequencer.base.org
-      - NODE_TYPE=vanilla
+    command: >
+      --l1=http://192.168.7.17:8545
+      --l2=http://base-execution:8545
+      --l2.jwt-secret=/data/jwt.txt
+      --l1.beacon=http://192.168.7.18:5052
+      --rollup.config=/data/rollup.json
+      --rpc.addr=0.0.0.0
+      --rpc.port=8545
+      --p2p.listen.ip=0.0.0.0
+      --p2p.listen.tcp=9222
+      --p2p.listen.udp=9223
+      --metrics.enabled
+      --metrics.addr=0.0.0.0
+      --metrics.port=7300
+      --p2p.priv.path=/data/priv.txt
     volumes:
       - base_op_node_data:/data
     networks:

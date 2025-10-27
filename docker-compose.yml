@@ -48,7 +48,6 @@ services:
       - Network.P2PPort=30304
     volumes:
       - base_execution_data:/data
-      - snapshot_script_volume:/snapshot-download.sh:ro
     networks:
       - default
     ports:
@@ -61,15 +60,13 @@ services:
 volumes:
   base_op_node_data:
   base_execution_data:
-  snapshot_script_volume:
-    driver: local
-    driver_opts:
-      type: none
-      o: bind
-      device: ${PWD}/snapshot-download.sh
 
 networks:
   default:
     driver: bridge
   ipvlan_ens2f0np0:
+    driver: ipvlan
     external: true
+    driver_opts:
+      parent: ens2f0np0
+      ipvlan_mode: l3

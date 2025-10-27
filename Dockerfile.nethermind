@@ -1,0 +1,9 @@
+# Use official Nethermind as base
+FROM nethermindeth/nethermind:latest
+
+# Copy snapshot script
+COPY snapshot-download.sh /snapshot-download.sh
+RUN chmod +x /snapshot-download.sh
+
+# Optional: Verify
+# RUN ls -la /snapshot-download.sh

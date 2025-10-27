@@ -29,7 +29,9 @@ services:
     restart: unless-stopped
 
   base-execution:
-    image: nethermindeth/nethermind:latest
+    build:
+      context: .
+      dockerfile: Dockerfile.nethermind
     entrypoint: ["/snapshot-download.sh"]
     command: ["--config", "base"]
     environment:

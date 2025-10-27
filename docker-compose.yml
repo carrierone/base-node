@@ -16,7 +16,7 @@ services:
     volumes:
       - base_op_node_data:/data
     networks:
-      macvlan_ens2f0np0:
+      ipvlan_ens2f0np0:
         ipv4_address: 192.168.7.35
     ports:
       - "7545:8545"
@@ -71,5 +71,5 @@ volumes:
 networks:
   default:
     driver: bridge
-  macvlan_ens2f0np0:
+  ipvlan_ens2f0np0:
     external: true

@@ -1,13 +1,13 @@
-#!/bin/bash
+#!/bin/sh
 set -e
 SNAPSHOT_URL="https://mainnet-full-snapshots.base.org/$(curl -s https://mainnet-full-snapshots.base.org/latest)"
 DATA_DIR="/data"
 if [ ! -d "$DATA_DIR/chaindata" ]; then
-  echo "Downloading Base snapshot with aria2c..."
+  echo "Downloading Base snapshot..."
   apk add --no-cache aria2 zstd
   cd /tmp
-  aria2c -x 16 -s 16 -k 1M "$SNAPSHOT_URL" -o base-geth-full.zst
-  tar -I zstd -xvf base-geth-full.zst -C "$DATA_DIR"
-  rm base-geth-full.zst
+  aria2c -x16 -s16 -k1M "$SNAPSHOT_URL" -o s.zst
+  tar -I zstd -xf s.zst -C "$DATA_DIR"
+  rm s.zst
 fi
-exec "$@"
+exec nethermind "$@"

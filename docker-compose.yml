@@ -2,9 +2,16 @@ version: '3.8'
 
 services:
   base-op-node:
+    image: base-op-node:latest
     build:
       context: .
       dockerfile: Dockerfile
+      args:
+        OP_NODE_VERSION: v1.14.3
+      # Enable BuildKit for better layer caching
+      cache_from:
+        - base-op-node:latest
+    container_name: base-op-node
     command: >
       --l1=http://192.168.7.17:8545
       --l2=http://base-execution:8545
@@ -36,9 +43,14 @@ services:
     restart: unless-stopped
 
   base-execution:
+    image: base-execution:latest
     build:
       context: .
       dockerfile: Dockerfile.nethermind
+      # Enable BuildKit for better layer caching
+      cache_from:
+        - base-execution:latest
+    container_name: base-execution
     entrypoint: ["/snapshot-download.sh"]
     command: ["--config", "base"]
     environment:

@@ -1,0 +1,33 @@
+# Ignore git files
+.git
+.gitignore
+.gitattributes
+
+# Ignore documentation
+*.md
+README*
+LICENSE
+
+# Ignore data directories (will be mounted as volumes)
+data/
+
+# Ignore IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Ignore logs
+*.log
+logs/
+
+# Ignore temporary files
+*.tmp
+tmp/
+temp/
+
+# Ignore build artifacts and scripts not needed in images
+build.sh
+op-node
+# Note: op-node binary is no longer needed as we build from source

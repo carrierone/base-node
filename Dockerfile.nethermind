@@ -1,5 +1,24 @@
 FROM nethermindeth/nethermind:latest
-RUN apt update -qq && apt install -y -qq curl aria2 zstd openssl && rm -rf /var/lib/apt/lists/*
+
+# Install all dependencies once during build (not at runtime)
+# Using retry logic to handle transient network failures
+RUN apt-get clean && \
+    rm -rf /var/lib/apt/lists/* && \
+    for i in 1 2 3 4 5; do \
+        apt-get update -qq && \
+        apt-get install -y -qq --no-install-recommends \
+            curl \
+            aria2 \
+            zstd \
+            openssl && \
+        rm -rf /var/lib/apt/lists/* && \
+        break || { \
+            echo "Attempt $i failed, retrying in 5 seconds..."; \
+            sleep 5; \
+        }; \
+    done
+
 COPY snapshot-download.sh /snapshot-download.sh
 RUN chmod +x /snapshot-download.sh
+
 ENTRYPOINT ["/snapshot-download.sh"]

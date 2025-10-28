@@ -1,0 +1,11 @@
+FROM nethermindeth/nethermind:latest
+
+# Minimal version - install only absolutely required dependencies
+# aria2 and zstd will be installed at runtime if snapshot needed
+RUN apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
+COPY snapshot-download.sh /snapshot-download.sh
+RUN chmod +x /snapshot-download.sh
+
+ENTRYPOINT ["/snapshot-download.sh"]

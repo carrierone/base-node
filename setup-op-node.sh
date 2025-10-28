@@ -20,3 +20,6 @@ if [ ! -f /data/priv.txt ]; then
 fi
 
 echo "OP-Node setup complete"
+
+# Start op-node with all arguments passed to the script
+exec /usr/local/bin/op-node "$@"

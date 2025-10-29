@@ -74,7 +74,7 @@ services:
       - base_execution_data:/data
     networks:
       ipvlan_ens2f0np0:
-        ipv4_address: 192.168.7.36
+        ipv4_address: 192.168.7.39
     depends_on: []
     restart: unless-stopped
 

@@ -65,17 +65,17 @@ services:
       - Optimism.SequencerUrl=https://mainnet-sequencer.base.org
       - Database.Path=/data
       - Sync.Snap=true
+      - Metrics.Enabled=true
+      - Metrics.ExposeHost=0.0.0.0
+      - Metrics.ExposePort=6060
       - Network.DiscoveryPort=30304
       - Network.P2PPort=30304
     volumes:
       - base_execution_data:/data
     networks:
-      - default
-    ports:
-      - "8547:8545"
-      - "30304:30304"
-      - "30304:30304/udp"
-      - "7303:6060"
+      ipvlan_ens2f0np0:
+        ipv4_address: 192.168.7.36
+    depends_on: []
     restart: unless-stopped
 
 volumes:
